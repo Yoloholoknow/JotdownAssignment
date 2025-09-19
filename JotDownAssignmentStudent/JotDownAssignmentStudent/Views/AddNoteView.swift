@@ -13,18 +13,20 @@ struct AddNoteView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     
-    @State private var courseName: String = ""
+    @State private var title: String = ""
     @State private var noteText: String = ""
     @State private var summary: String = ""
     @State private var showImporter = false
     
+    private let noteSummarizer = NoteSummarizer()
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                // Course Name
-                TextField("Course Name", text: $courseName)
+                // Title
+                TextField("Title", text: $title)
                     .textFieldStyle(.roundedBorder)
-                
+
                 // Notes Input Area
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
@@ -45,9 +47,14 @@ struct AddNoteView: View {
                 Button("Generate Summary") {
                     //TO DO: Use your NoteSummarizer.swift to use FoundationModels to get an
                     // AI Generated summary of your notes!
-                    // HINT: The parsed text from the PDF is stored in the noteText variable after you upload a valid PDF!
-                    // HINT: Store the AI Generated summary into the summary variable
                     
+                    Task {
+                        do {
+                            summary = try await noteSummarizer.summarizeNotes(noteText)
+                        } catch {
+                            summary = "Erroy generating summary: \(error.localizedDescription)"
+                        }
+                    }
                 }
                 .buttonStyle(.borderedProminent)
             
@@ -65,9 +72,13 @@ struct AddNoteView: View {
                         Button("Save Note") {
                             // TODO: Implement the functionality to save the newly added note to Swift Data
                             // HINT: Look at the context variable defined above! What is the purpose of that variable?
+                            
+                            let newNote = StudyNote(title: title, noteText: noteText, summary: summary)
+                            context.insert(newNote)
+                            dismiss()
                         }
                         .buttonStyle(.borderedProminent)
-                        .disabled(courseName.isEmpty ? true : false)
+                        .disabled(title.isEmpty ? true : false)
                     }
                 }
                 
@@ -152,7 +163,7 @@ struct AddNoteView: View {
         return fullText
     }
 }
+
 #Preview {
     AddNoteView()
 }
-

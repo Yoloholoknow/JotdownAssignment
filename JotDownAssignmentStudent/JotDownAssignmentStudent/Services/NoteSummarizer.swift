@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FoundationModels
 
 // TO DO: STUDENT
 //
@@ -35,7 +36,16 @@ import Foundation
 //
 
 class NoteSummarizer {
+    
+    private let session = LanguageModelSession(instructions: """
+        You are an expert AI study assistant.
+        Your goal is to summarize the provided notes into 3-5 concise bullet points
+        that are easy to study from.
+    """)
+    
     func summarizeNotes(_ text: String) async throws -> String {
-        return ""
+        let prompt = "Please summarize the following notes for me: \(text)"
+        let response = try await session.respond(to: prompt).content
+        return response
     }
 }

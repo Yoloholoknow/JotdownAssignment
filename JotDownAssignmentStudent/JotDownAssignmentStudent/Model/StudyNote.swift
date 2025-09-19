@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftData
 // TO DO:
 //
 // In this file, you will define a SwiftData model called `StudyNote`.
@@ -33,3 +34,20 @@ import Foundation
 // HINT: Look at the sample properties above and think about what types they should be.
 // Then write the class definition yourself.
 //
+
+@Model
+final class StudyNote {
+    @Attribute(.unique) var id: UUID
+    var title: String
+    var noteText: String
+    var summary: String
+    var creationDate: Date
+    
+    init(title: String, noteText: String, summary: String) {
+        self.id = UUID()
+        self.title = title
+        self.noteText = noteText
+        self.summary = summary
+        self.creationDate = Date()
+    }
+}
