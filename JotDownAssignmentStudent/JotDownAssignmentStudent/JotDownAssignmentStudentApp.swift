@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct JotDownAssignmentStudentApp: App {
@@ -15,5 +16,6 @@ struct JotDownAssignmentStudentApp: App {
         WindowGroup {
             DashboardView()
         }
+        .modelContainer(for: StudyNote.self)
     }
 }
