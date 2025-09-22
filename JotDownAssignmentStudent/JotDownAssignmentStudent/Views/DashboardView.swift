@@ -30,6 +30,7 @@ struct DashboardView: View {
                         }
                     }
                 }
+                .onDelete(perform: deleteNotes)
             }
             .navigationTitle("Study Dashboard")
             .toolbar {
@@ -37,6 +38,12 @@ struct DashboardView: View {
                     Image(systemName: "plus")
                 }
             }
+        }
+    }
+    
+    private func deleteNotes(at offsets: IndexSet) {
+        for index in offsets {
+            modelContext.delete(notes[index])
         }
     }
 }
